@@ -11,7 +11,7 @@ ENV PATH /opt/perl-$PERL_VERSION/bin:$PATH
 COPY cpanfiles /cpanfiles
 
 RUN apt-get update; \
-    apt-get install -yq --no-install-recommends 
+    apt-get install -yq --no-install-recommends \
     perl \
     ca-certificates \
     curl \
