@@ -31,9 +31,9 @@ RUN apt-get update; \
     rm -rf mod_perl-$MOD_PERL_VERSION mod_perl-$MOD_PERL_VERSION.tar.gz && \
     apt-get remove -yq perl build-essential && \
     apt-get autoremove -yq && \
-    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/lib/apt/lists/*
 # Instal·la tots els moduls necessaris amb CPAN
-    apt-get update; \
+RUN apt-get update; \
     apt-get install -y \
     cpanminus \
     default-mysql-client \
