@@ -10,6 +10,7 @@ ENV PATH /opt/perl-$PERL_VERSION/bin:$PATH
 
 COPY cpanfiles /cpanfiles
 
+# Build perl i mod_perl
 RUN apt-get update; \
     apt-get install -yq --no-install-recommends \
     perl \
@@ -17,7 +18,23 @@ RUN apt-get update; \
     curl \
     build-essential \
     libapr1-dev \
-    libaprutil1-dev \
+    libaprutil1-dev && \
+    curl -sfL https://raw.githubusercontent.com/tokuhirom/Perl-Build/master/perl-build | perl - $PERL_VERSION /opt/perl-$PERL_VERSION/ -Duseshrplib -Duseithreads -j "$(nproc)" && \
+    curl -sfLO https://dlcdn.apache.org/perl/mod_perl-$MOD_PERL_VERSION.tar.gz && \
+    echo "$MOD_PERL_CHECKSUM *mod_perl-$MOD_PERL_VERSION.tar.gz" | sha256sum -c && \
+    tar xzf mod_perl-$MOD_PERL_VERSION.tar.gz && \
+    cd mod_perl-$MOD_PERL_VERSION && \
+    /opt/perl-$PERL_VERSION/bin/perl Makefile.PL && \
+    make -j "$(nproc)" && \
+    make install && \
+    cd .. && \
+    rm -rf mod_perl-$MOD_PERL_VERSION mod_perl-$MOD_PERL_VERSION.tar.gz && \
+    apt-get remove -yq perl build-essential && \
+    apt-get autoremove -yq && \
+    rm -rf /var/lib/apt/lists/* && \
+# Instal·la tots els moduls necessaris amb CPAN
+    apt-get update; \
+    apt-get install -y \
     cpanminus \
     default-mysql-client \
     default-libmysqlclient-dev \
@@ -33,20 +50,8 @@ RUN apt-get update; \
     perlmagick \
     tar \
     zlib1g-dev && \
-    curl -sfL https://raw.githubusercontent.com/tokuhirom/Perl-Build/master/perl-build | perl - $PERL_VERSION /opt/perl-$PERL_VERSION/ -Duseshrplib -Duseithreads -j "$(nproc)" && \
-    curl -sfLO https://dlcdn.apache.org/perl/mod_perl-$MOD_PERL_VERSION.tar.gz && \
-    echo "$MOD_PERL_CHECKSUM *mod_perl-$MOD_PERL_VERSION.tar.gz" | sha256sum -c && \
-    tar xzf mod_perl-$MOD_PERL_VERSION.tar.gz && \
-    cd mod_perl-$MOD_PERL_VERSION && \
-    /opt/perl-$PERL_VERSION/bin/perl Makefile.PL && \
-    make -j "$(nproc)" && \
-    make install && \
-    cd .. && \
-    rm -rf mod_perl-$MOD_PERL_VERSION mod_perl-$MOD_PERL_VERSION.tar.gz && \
-    apt-get remove -yq perl build-essential && \
-    apt-get autoremove -yq && \
-    rm -rf /var/lib/apt/lists/* && \
     cat /cpanfiles | xargs /opt/perl-$PERL_VERSION/bin/perl -MCPAN -e 'install($_) for @ARGV' && \
+# Instal·la els moduls que no superen els test amb CPAN
     curl --compressed -fsSL https://git.io/cpm | \
     /opt/perl-$PERL_VERSION/bin/perl - install -g \
     DBIx::Class::InflateColumn::Currency \
