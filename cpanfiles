@@ -13,11 +13,9 @@ Text::Autoformat
 Text::Unaccent::PurePerl
 XML::Simple
 YAML
-CHI
 BerkeleyDB
 Moose
 Net::LDAPS
-CHI::Driver::Memcached
 Cache::Memcached
 Readonly
 PDF::API2
@@ -52,3 +50,5 @@ Apache2::UploadProgress
 DBD::mysql
 BSD::Resource
 AuthCAS
+CHI
+CHI::Driver::Memcached
