@@ -50,9 +50,9 @@ RUN apt-get update; \
     perlmagick \
     tar \
     zlib1g-dev && \
-    cat /cpanfiles | xargs /opt/perl-$PERL_VERSION/bin/perl -MCPAN -e 'install($_) for @ARGV' && \
+    cat /cpanfiles | xargs /opt/perl-$PERL_VERSION/bin/perl -MCPAN -e 'install($_) for @ARGV'
 # Instal·la els moduls que no superen els test amb CPAN
-    curl --compressed -fsSL https://git.io/cpm | \
+RUN curl --compressed -fsSL https://git.io/cpm | \
     /opt/perl-$PERL_VERSION/bin/perl - install -g \
     DBIx::Class::InflateColumn::Currency \
     SOAP::Lite
