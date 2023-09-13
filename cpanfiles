@@ -52,3 +52,4 @@ BSD::Resource
 AuthCAS
 CHI
 CHI::Driver::Memcached
+Spreadsheet::Read
