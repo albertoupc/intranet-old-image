@@ -53,3 +53,4 @@ AuthCAS
 CHI
 CHI::Driver::Memcached
 Spreadsheet::Read
+JSON::WebToken
